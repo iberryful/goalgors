@@ -50,22 +50,26 @@ func Insert(root *BSTreeNode, key int) *BSTreeNode {
 	return node
 }
 
-func Search(root *BSTreeNode, key int) (*BSTreeNode, bool){
+func Search(root *BSTreeNode, key int) (*BSTreeNode, bool) {
 	for root != nil && root.Key != key {
-		if key < root.Key{
+		if key < root.Key {
 			root = root.Left
 		} else {
 			root = root.Right
 		}
 	}
+
 	return root, root != nil
 }
 
-func (tree *BSTree)Search(key int) (*BSTreeNode, bool) {
+func (tree *BSTree) Search(key int) (*BSTreeNode, bool) {
 	return Search(tree.Root, key)
 }
 
 func Min(root *BSTreeNode) (*BSTreeNode) {
+	if root == nil {
+		return nil
+	}
 
 	for root.Left != nil {
 		root = root.Left
@@ -73,7 +77,7 @@ func Min(root *BSTreeNode) (*BSTreeNode) {
 	return root
 }
 
-func (tree *BSTree)Min() (*BSTreeNode) {
+func (tree *BSTree) Min() (*BSTreeNode) {
 	return Min(tree.Root)
 }
 
@@ -88,8 +92,91 @@ func Max(root *BSTreeNode) (*BSTreeNode) {
 	return root
 }
 
-func (tree *BSTree)Max() (*BSTreeNode) {
+func (tree *BSTree) Max() (*BSTreeNode) {
 	return Max(tree.Root)
 }
 
+func (root *BSTreeNode) Successor() (*BSTreeNode) {
+	if root.Right != nil {
+		return Min(root.Right)
+	}
 
+	p := root.Parent
+	for p != nil && root == p.Right {
+		root = p
+		p = p.Parent
+	}
+
+	return p
+}
+
+func (root *BSTreeNode) Predecessor() (*BSTreeNode) {
+	if root.Left != nil {
+		return Max(root.Left)
+	}
+
+	p := root.Parent
+	for p != nil && root == p.Left {
+		root = p
+		p = p.Parent
+	}
+
+	return p
+}
+
+func (tree *BSTree) Delete(key int) {
+	node, ok := tree.Search(key)
+	if !ok {
+		return
+	}
+
+	tree.Root = Delete(tree.Root, node)
+}
+
+func Delete(root *BSTreeNode, node *BSTreeNode) (*BSTreeNode) {
+	if node == nil {
+		return root
+	}
+
+	if node.Key < root.Key {
+		root.Left = Delete(root.Left, node)
+		return root
+	}
+
+	if node.Key > root.Key {
+		root.Right = Delete(root.Right, node)
+		return root
+	}
+
+	if node.Left == nil && node.Right == nil {
+		return nil
+	}
+
+	if node.Right != nil {
+		k := Min(node.Right)
+		node.Key = k.Key
+		node.Right = Delete(node.Right, k)
+		return root
+	}
+
+	node.Left = node.Left.Left
+	node.Right = node.Left.Right
+	node.Key = node.Left.Key
+
+	return root
+}
+
+func Traverse(root *BSTreeNode) []int {
+	var keys []int
+	if root == nil {
+		return keys
+	}
+	keys = append(keys, root.Key)
+
+	return keys
+}
+
+//func (tree *BSTree) Traverse() []int{
+//	var keys []int
+//
+//}
