@@ -47,12 +47,27 @@ func checkBSTreeNode(node *bst.BSTreeNode) error {
 	return nil
 }
 
+func CheckBSTdelete(tree *bst.BSTree) {
+	keys := tree.Traverse()
+	for _, v := range keys {
+		node, ok := tree.Search(v)
+		assert(node.Key == v)
+		assert(ok == true)
+		tree.Delete(v)
+		tree.Search(v)
+		_, ok = tree.Search(v)
+		assert(ok == false)
+		checkBSTreeNode(tree.Root)
+	}
+}
+
 func checkBSTree(tree *bst.BSTree) error {
 	if tree.Root == nil {
 		return nil
 	}
 
 	checkBSTreeNode(tree.Root)
+	CheckBSTdelete(tree)
 
 	return nil
 }
@@ -63,12 +78,6 @@ func main() {
 	checkBSTree(tree)
 
 	fmt.Println("tests passed")
-
-	s := []int{1,2,3}
-	for i,v := range s {
-		fmt.Println(i,v)
-		s = append(s, i+1)
-	}
 
 	return
 }

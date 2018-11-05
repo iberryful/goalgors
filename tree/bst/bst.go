@@ -159,9 +159,16 @@ func Delete(root *BSTreeNode, node *BSTreeNode) (*BSTreeNode) {
 		return root
 	}
 
-	node.Left = node.Left.Left
-	node.Right = node.Left.Right
-	node.Key = node.Left.Key
+	root.Key = node.Left.Key
+	root.Right = node.Left.Right
+	root.Left = node.Left.Left
+
+	if root.Left != nil {
+		node.Left.Parent = root
+	}
+	if root.Right != nil {
+		node.Right.Parent = root
+	}
 
 	return root
 }
@@ -172,11 +179,11 @@ func Traverse(root *BSTreeNode) []int {
 		return keys
 	}
 	keys = append(keys, root.Key)
-
+	keys = append(keys, Traverse(root.Left)...)
+	keys = append(keys, Traverse(root.Right)...)
 	return keys
 }
 
-//func (tree *BSTree) Traverse() []int{
-//	var keys []int
-//
-//}
+func (tree *BSTree) Traverse() []int{
+	return Traverse(tree.Root)
+}
