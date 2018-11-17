@@ -28,8 +28,6 @@ func prepareBSTree() (*bst.BSTree) {
 	return tree
 }
 
-
-
 func checkBSTreeNode(node *bst.BSTreeNode) error {
 	if node == nil {
 		return nil

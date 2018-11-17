@@ -184,6 +184,6 @@ func Traverse(root *BSTreeNode) []int {
 	return keys
 }
 
-func (tree *BSTree) Traverse() []int{
+func (tree *BSTree) Traverse() []int {
 	return Traverse(tree.Root)
 }
